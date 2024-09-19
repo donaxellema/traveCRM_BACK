@@ -44,6 +44,11 @@ const initializeClient = () => {
     let mensajeFinal='';
     let dataEmp;
     client.on('message', async (msg) => {
+        // Verificar si el tipo de mensaje es de texto ('chat')
+    if (msg.type === 'chat') {
+        //console.log('Mensaje de texto recibido:', message.body);
+        // Aquí puedes procesar el mensaje o almacenarlo en la base de datos
+
         console.log(msg)
         console.log(`Mensaje recibido desde el whatsapp del cliente  ${msg.from}: ${msg.body}`);
         let phoneNumber = msg.from.split('@')[0];
@@ -67,6 +72,8 @@ const initializeClient = () => {
             [obj_messageWhatsapp, opcion, _limite, _offset]
           );
           const respuesta = result.rows[0].crm_mensajes_v1;
+          console.log("respuesta ++++++++++++++++++++++++++++++++++++++++")
+          console.log(respuesta)
           if (respuesta.status === 'ok' && respuesta.code === 200) {
             console.log(respuesta)
             //res.status(200).json({ code:respuesta.code, status: respuesta.status, message: respuesta.message, obj:respuesta.obj });
@@ -74,8 +81,8 @@ const initializeClient = () => {
             
             const message="El usuario no se encuentra registrado en el sistema";
             const chatId = `${phoneNumber}@c.us`;
-            dataEmp= respuesta.empresa[0]
             console.log(respuesta)
+            dataEmp= respuesta.empresa[0]
             //const response = await client.sendMessage(chatId, message);            
             //const userState = conversationState[phoneNumber];
 
@@ -115,7 +122,7 @@ const initializeClient = () => {
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (emailRegex.test(email)) {
                     userState.data.email = email;  // Almacena el correo electrónico proporcionado
-                    mensajeFinal='¡Gracias! Hemos recibido la siguiente información:\nNombre:'+ userState.data.name +' '+ userState.data.lastName+'\nCédula: '+ userState.data.ciudad +'\nEmail: '+userState.data.email;
+                    mensajeFinal='¡Gracias! Hemos recibido la siguiente información:\nNombre:'+ userState.data.name +' '+ userState.data.lastName+'\nCiudad: '+ userState.data.ciudad +'\nEmail: '+userState.data.email;
                     await client.sendMessage(msg.from, `¡Gracias! Hemos recibido la siguiente información:\nNombre: ${userState.data.name} ${userState.data.lastName}\nCédula: ${userState.data.ciudad}\nEmail: ${userState.data.email}`);
                     //await client.sendMessage(msg.from, mensajeFinal);
                     
@@ -208,15 +215,6 @@ const initializeClient = () => {
             }
 
 
-
-
-
-
-            /* console.log("El usuario no se encuentra registrado en el sistema")
-            console.log("result")
-            console.log(result) */
-            //res.status(respuesta.code).json({ status: respuesta.status, message: respuesta.message });
-
           } else {
             console.log(respuesta)
             //res.status(respuesta.code).json({ status: respuesta.status, message: respuesta.message });
@@ -224,6 +222,20 @@ const initializeClient = () => {
 
          // SE DEBE CONTROLAR CUANDO NO ES UN NUMERO REGISTRADO
           console.log(respuesta)  
+
+    } else if (msg.type === 'ptt') {
+        //console.log('Nota de voz recibida, ignorando...');
+        await client.sendMessage(msg.from, `No se puede aceptar este tipo de mensaje, Nota de voz recibida, ignorando... `);
+
+        // Puedes hacer algo aquí si es una nota de voz, como notificar al usuario
+    } else {
+        //console.log('Otro tipo de mensaje recibido:', message.type);
+        await client.sendMessage(msg.from, `No se puede aceptar este tipo de mensaje, ignorando... `);
+        
+    }
+
+    
+        
     });
 
 
@@ -236,13 +248,14 @@ initializeClient();
 
 exports.sendMessage = async (req, res) => {
     console.log("req");
-    console.log(req);
+    //console.log(req);
     const { pers_id_sender,number, message } = req.body;
 
     try {
         const chatId = `${number}@c.us`;
 
         const response = await client.sendMessage(chatId, message);
+        console.log(response);
 
          // Guarda el mensaje y la respuesta en la base de datos
         /* const query = 'INSERT INTO messages (number, message, response) VALUES ($1, $2, $3) RETURNING *';
@@ -276,13 +289,13 @@ exports.sendMessage = async (req, res) => {
             [obj_messageWhatsapp, opcion, _limite, _offset]
           );
           const respuesta = result.rows[0].crm_mensajes_v1;
-          /* if (respuesta.status === 'ok' && respuesta.code === 200) {
+          if (respuesta.status === 'ok' && respuesta.code === 200) {
             console.log(respuesta)
             res.status(200).json({ code:respuesta.code, status: respuesta.status, message: respuesta.message, obj:respuesta.obj });
           } else {
             console.log(respuesta)
             res.status(respuesta.code).json({ status: respuesta.status, message: respuesta.message });
-          } */
+          }
           
 
     } catch (error) {

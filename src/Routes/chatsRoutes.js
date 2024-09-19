@@ -12,6 +12,8 @@ const router = express.Router();
 //router.put('/clientes', authenticate, clientes.clienteCRUD);
 router.get('/chat_by_id', authenticate, chats.getChatByID);
 router.post('/insert_chat', authenticate, chats.chatsCRUD);
+
+router.get('/last_Chat_by_user', authenticate, chats.last_Chat_by_user);
 //router.get('/clientes_search', authenticate, clientes.get_ClientesSearchCRUD);
 //router.get('/clientes', authenticate, clientes.getClientesCRUD);
 module.exports = router;

@@ -4,16 +4,11 @@ const jwt = require('jsonwebtoken');
 const {generateToken} = require('../../Middleware/authentication')
 
 
-//REGISTRAR O ACTUALIZAR PERSONAS EN EL SISTEMA
+//REGISTRAR O MENSAJES INTERNOS ENTRE AGENTES SIN EL USO DE WHATSAPP
 const chatsCRUD = async (req, res) => {
 
   const obj= req.body.data
   const { opcion, _limite, _offset} = req.body;
-  console.log(obj)
-  
-  /* console.log(opcion)
-  console.log(_limite)
-  console.log(_offset) */
   try {
     const result = await pool.query(
       'SELECT crm_mensajes_v1($1, $2, $3, $4)',
@@ -21,8 +16,6 @@ const chatsCRUD = async (req, res) => {
     );
     const respuesta = result.rows[0].crm_mensajes_v1;
     if (respuesta.status === 'ok' && respuesta.code === 200) {
-      console.log("respuestaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-      console.log(respuesta)
       res.status(200).json({ code:respuesta.code, status: respuesta.status, message: respuesta.message, obj:respuesta.obj });
     } else {
       console.log(respuesta)
@@ -34,12 +27,10 @@ const chatsCRUD = async (req, res) => {
 
 };
 
-//TRAE TODOS LOS MENSAJES ENVIADOS POR ID DE CHAT
+//TRAE TODOS LOS MENSAJES ENVIADOS POR ID DE CHAT -- PERO SOLO MENSAJES QUE SON ENVIADOS DENTRO DEL SISTEMA SIN WHATSAPP
 const getChatByID = async (req, res) => {
     const obj1 = req.query
-    console.log(req.query)
     const obj = {
-        //chat_id:obj1.chat_id
         pers_id_sender:obj1.pers_id_sender,
         pers_id_receiver:obj1.pers_id_receiver
     }
@@ -65,18 +56,25 @@ const getChatByID = async (req, res) => {
   };
 
 
-  //REGISTRA LOS CHATS POR WHATSAPP
-const chatsWCRUD1 = async (req, res) => {
+  //TRAE TODOS LOS MENSAJES DEL ULTIMO CHAT DE WHATSAPP POR USUARIO SELECCIONADO
+const last_Chat_by_user = async (req, res) => {
 
-    const obj= req.body.data
+    /* const obj= req.body.data
     const { _limite, _offset} = req.body;
-    const opcion="I_W_CHAT";
+    const opcion="H_W_CHAT"; //HISTORIAL WHATSAPP 
     console.log("obj")
-    console.log(obj)
+    console.log(obj) */
+    console.log(JSON.stringify(req.query) )
+    const obj1 = req.query
+    const obj = {
+        pers_id_sender:obj1.pers_id_sender,
+        pers_id_receiver:obj1.pers_id_receiver
+    }
+    const  opcion = "H_W_CHAT";
+    const _limite = 0;
+    const _offset = 0;
+
     
-    /* console.log(opcion)
-    console.log(_limite)
-    console.log(_offset) */
     try {
       const result = await pool.query(
         'SELECT crm_mensajes_v1($1, $2, $3, $4)',
@@ -85,7 +83,7 @@ const chatsWCRUD1 = async (req, res) => {
       const respuesta = result.rows[0].crm_mensajes_v1;
       if (respuesta.status === 'ok' && respuesta.code === 200) {
         console.log(respuesta)
-        res.status(200).json({ code:respuesta.code, status: respuesta.status, message: respuesta.message, obj:respuesta.obj });
+        res.status(200).json({ code:respuesta.code, status: respuesta.status, message: respuesta.message, data: respuesta.data, obj:respuesta.obj });
       } else {
         console.log(respuesta)
         res.status(respuesta.code).json({ status: respuesta.status, message: respuesta.message });
@@ -101,7 +99,7 @@ const chatsWCRUD1 = async (req, res) => {
 
 
 //Buscar coincidencias en el BDD y puede TRAER TODOS LOS DATOS
-const get_agentesSearchCRUD = async (req, res) => {
+/* const get_agentesSearchCRUD = async (req, res) => {
   const obj1 = req.query
   const obj = {buscar:obj1.buscar}
   const { opcion, _limite , _offset} = req.query;
@@ -127,10 +125,10 @@ const get_agentesSearchCRUD = async (req, res) => {
     res.status(500).json({ status: 'error', message: error.message });
   }
 
-};
+}; */
 
 
-const getAgentesCRUD = async (req, res) => {
+/* const getAgentesCRUD = async (req, res) => {
     console.log(req.query)
     const { usu_id,opcion, _limite, _offset} = req.query;
     const obj={usu_id:usu_id}
@@ -152,10 +150,10 @@ const getAgentesCRUD = async (req, res) => {
       res.status(500).json({ status: 'error', message: error.message });
     }
   
-  };
+  }; */
 
   //para verificar si existen un usuario agente con esa persona
-  const agentes_verifica = async (req, res) => {
+  /* const agentes_verifica = async (req, res) => {
     console.log(req.query)
     const { pers_id,opcion, _limite, _offset} = req.query;
     const obj={pers_id:pers_id}
@@ -177,11 +175,11 @@ const getAgentesCRUD = async (req, res) => {
       res.status(500).json({ status: 'error', message: error.message });
     }
   
-  };
+  }; */
 
 
 //eliminar registro
-const delete_agentesCRUD = async (req, res) => {
+/* const delete_agentesCRUD = async (req, res) => {
   const { pers_id,opcion, _limite , _offset} = req.query;
   const obj = {pers_id:pers_id}
   console.log(req.query)
@@ -200,7 +198,7 @@ const delete_agentesCRUD = async (req, res) => {
     res.status(500).json({ status: 'error', message: error.message });
   }
 
-};
+}; */
 
 
 
@@ -210,11 +208,11 @@ module.exports = {
     getChatByID,
     //chatsWCRUD,
     chatsCRUD,
-
+    last_Chat_by_user
   
   //get_agentesCRUD,
-  get_agentesSearchCRUD,
-  delete_agentesCRUD,
-  agentes_verifica,
-  getAgentesCRUD
+  //get_agentesSearchCRUD,
+  //delete_agentesCRUD,
+  //agentes_verifica,
+  //getAgentesCRUD
 };
