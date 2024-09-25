@@ -117,6 +117,33 @@ const getAgentesCRUD = async (req, res) => {
   
   };
 
+
+
+
+  const getAgentesCRUD_last_Message = async (req, res) => {
+    console.log(req.query)
+    const { usu_id,opcion, _limite, _offset} = req.query;
+    const obj={usu_id:usu_id}
+    try {
+      const result = await pool.query(
+        'SELECT crm_agentepersona_v1($1, $2, $3, $4)',
+        [obj, opcion, _limite, _offset]
+      );
+      const respuesta = result.rows[0].crm_agentepersona_v1;
+      console.log("respuesta")
+      console.log(respuesta)
+      if (respuesta.status === 'ok' && respuesta.code === 200) {
+        res.status(200).json({ code:respuesta.code, status: respuesta.status, message: respuesta.message, persona:respuesta.persona ,data:respuesta.data ,totalItems:respuesta.totalItems});
+      } else {
+        res.status(respuesta.code).json({ obj:obj, status: respuesta.status, message: respuesta.message });
+      }
+    } catch (error) {
+        console.log(error)
+      res.status(500).json({ status: 'error', message: error.message });
+    }
+  
+  };
+
   //para verificar si existen un usuario agente con esa persona
   const agentes_verifica = async (req, res) => {
     console.log(req.query)
@@ -176,5 +203,6 @@ module.exports = {
   get_agentesSearchCRUD,
   delete_agentesCRUD,
   agentes_verifica,
-  getAgentesCRUD
+  getAgentesCRUD,
+  getAgentesCRUD_last_Message
 };
