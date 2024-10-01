@@ -121,19 +121,22 @@ const getAgentesCRUD = async (req, res) => {
 
 
   const getAgentesCRUD_last_Message = async (req, res) => {
+    console.log("req.query")
     console.log(req.query)
-    const { usu_id,opcion, _limite, _offset} = req.query;
-    const obj={usu_id:usu_id}
+    const { pers_id,opcion, _limite, _offset} = req.query;
+    const obj={pers_id:pers_id}
     try {
       const result = await pool.query(
-        'SELECT crm_agentepersona_v1($1, $2, $3, $4)',
+        'SELECT crm_mensajes_v1($1, $2, $3, $4)',
         [obj, opcion, _limite, _offset]
       );
-      const respuesta = result.rows[0].crm_agentepersona_v1;
+      const respuesta = result.rows[0].crm_mensajes_v1;
       console.log("respuesta")
       console.log(respuesta)
       if (respuesta.status === 'ok' && respuesta.code === 200) {
-        res.status(200).json({ code:respuesta.code, status: respuesta.status, message: respuesta.message, persona:respuesta.persona ,data:respuesta.data ,totalItems:respuesta.totalItems});
+        res.status(200).json({ code:respuesta.code, status: respuesta.status, message: respuesta.message, 
+          persona:respuesta.persona ,data:respuesta.data ,data_sender:respuesta.data_sender,
+          totalItems:respuesta.totalItems});
       } else {
         res.status(respuesta.code).json({ obj:obj, status: respuesta.status, message: respuesta.message });
       }
@@ -170,6 +173,38 @@ const getAgentesCRUD = async (req, res) => {
   };
 
 
+// CONSULTAR CONVERSACION POR ID
+//REGISTRAR O ACTUALIZAR PERSONAS EN EL SISTEMA
+const getMessageConversation = async (req, res) => {
+  //const { etiq_id,pers_nombres,pers_apellidos,pers_telefono,pers_email, pers_estado, pers_audit_reg } = req.body.data;
+  const obj= {
+    pers_id:req.body.pers_id,
+    chat_id:req.body.chat_id,
+    pers_sender:req.body.pers_sender
+  }
+  const { opcion, _limite, _offset} = req.body;
+  console.log("obj")
+  console.log(req.body)
+  try {
+    const result = await pool.query(
+      'SELECT crm_mensajes_v1($1, $2, $3, $4)',
+      [obj, opcion, _limite, _offset]
+    );
+    const respuesta = result.rows[0].crm_mensajes_v1;
+    if (respuesta.status === 'ok' && respuesta.code === 200) {
+      console.log(respuesta)
+      res.status(200).json({ code:respuesta.code,data:respuesta.data,data_sender:respuesta.data_sender, status: respuesta.status, message: respuesta.message, obj:respuesta.obj });
+    } else {
+      console.log(respuesta)
+      res.status(respuesta.code).json({ status: respuesta.status, message: respuesta.message });
+    }
+  } catch (error) {
+    res.status(500).json({ status: 'error', message: error.message });
+  }
+
+};
+
+
 //eliminar registro
 const delete_agentesCRUD = async (req, res) => {
   const { pers_id,opcion, _limite , _offset} = req.query;
@@ -204,5 +239,6 @@ module.exports = {
   delete_agentesCRUD,
   agentes_verifica,
   getAgentesCRUD,
-  getAgentesCRUD_last_Message
+  getAgentesCRUD_last_Message,
+  getMessageConversation
 };

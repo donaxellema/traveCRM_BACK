@@ -17,6 +17,7 @@ router.get('/agentes', authenticate, agentes.getAgentesCRUD);
 
 router.get('/agentes_on_line', authenticate, agentes.getAgentesCRUD);
 router.get('/agentes_with_message', authenticate, agentes.getAgentesCRUD_last_Message);
+router.post('/messages_by_chat', authenticate, agentes.getMessageConversation);
 
 
 module.exports = router;
