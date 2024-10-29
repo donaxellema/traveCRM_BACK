@@ -1,18 +1,15 @@
-2024/10/01-05:16:42.599 1ef4 Reusing MANIFEST C:\Users\alexd\OneDrive\Documents\GitHub\Trave\trave-CRM_BACKEND\traveCRM_BACK\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
-2024/10/01-05:16:42.601 1ef4 Recovering log #6424
-2024/10/01-05:16:42.610 1ef4 Reusing old log C:\Users\alexd\OneDrive\Documents\GitHub\Trave\trave-CRM_BACKEND\traveCRM_BACK\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/006424.log 
-2024/10/01-05:16:42.610 1ef4 Delete type=2 #6422
-2024/10/01-05:16:42.610 1ef4 Delete type=2 #6423
-2024/10/01-05:16:42.610 1ef4 Delete type=2 #6425
-2024/10/01-05:16:46.418 cb0 Level-0 table #6430: started
-2024/10/01-05:16:46.427 cb0 Level-0 table #6430: 69984 bytes OK
-2024/10/01-05:16:46.429 cb0 Delete type=0 #6424
-2024/10/01-05:16:46.430 cb0 Manual compaction at level-0 from ' \x11\x02\x00\x00\x00' @ 72057594037927935 : 1 .. ' \x12\x02\x00\x00\x00' @ 0 : 0; will stop at (end)
-2024/10/01-05:16:49.044 5598 Compacting 1@1 + 2@2 files
-2024/10/01-05:16:49.221 5598 Generated table #6431@1: 54733 keys, 2232552 bytes
-2024/10/01-05:16:49.258 5598 Generated table #6432@1: 12216 keys, 325334 bytes
-2024/10/01-05:16:49.258 5598 Compacted 1@1 + 2@2 files => 2557886 bytes
-2024/10/01-05:16:49.259 5598 compacted to: files[ 0 0 2 0 0 0 0 ]
-2024/10/01-05:16:49.259 5598 Delete type=2 #6426
-2024/10/01-05:16:49.259 5598 Delete type=2 #6427
-2024/10/01-05:16:49.260 5598 Delete type=2 #6430
+2024/10/27-23:13:46.491 5f48 Reusing MANIFEST C:\Users\alexd\OneDrive\Documents\GitHub\Trave\trave-CRM_BACKEND\traveCRM_BACK\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2024/10/27-23:13:46.518 5f48 Recovering log #6819
+2024/10/27-23:13:46.523 5f48 Reusing old log C:\Users\alexd\OneDrive\Documents\GitHub\Trave\trave-CRM_BACKEND\traveCRM_BACK\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/006819.log 
+2024/10/27-23:13:50.442 16ec Level-0 table #6825: started
+2024/10/27-23:13:50.453 16ec Level-0 table #6825: 31015 bytes OK
+2024/10/27-23:13:50.456 16ec Delete type=0 #6819
+2024/10/27-23:13:50.457 16ec Manual compaction at level-0 from ' u\x02\x00\x00\x00' @ 72057594037927935 : 1 .. ' v\x02\x00\x00\x00' @ 0 : 0; will stop at (end)
+2024/10/27-23:13:59.935 16ec Compacting 1@1 + 2@2 files
+2024/10/27-23:14:00.199 16ec Generated table #6826@1: 53789 keys, 2218368 bytes
+2024/10/27-23:14:00.311 16ec Generated table #6827@1: 18475 keys, 538241 bytes
+2024/10/27-23:14:00.311 16ec Compacted 1@1 + 2@2 files => 2756609 bytes
+2024/10/27-23:14:00.313 16ec compacted to: files[ 0 0 2 0 0 0 0 ]
+2024/10/27-23:14:00.314 16ec Delete type=2 #6821
+2024/10/27-23:14:00.314 16ec Delete type=2 #6822
+2024/10/27-23:14:00.314 16ec Delete type=2 #6825

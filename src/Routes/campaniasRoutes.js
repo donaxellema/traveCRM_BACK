@@ -14,5 +14,6 @@ router.put('/campanias', authenticate, campanias.campaniasCRUD);
 router.get('/campanias_by_id', authenticate, campanias.getCampaniasCRUD);
 router.get('/campanias_search', authenticate, campanias.get_CampaniasSearchCRUD);
 router.get('/campanias', authenticate, campanias.getCampaniasCRUD);
+router.post('/campanias_send_users', authenticate, campanias.campaniasCRUD_by_users);
 module.exports = router;
 

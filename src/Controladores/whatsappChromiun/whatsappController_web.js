@@ -1,8 +1,12 @@
 //const pool = require('../../Database/db');
 const pool = require('../../Database/db');
 
-const { Client, LocalAuth } = require('whatsapp-web.js');
+const { Client, LocalAuth, MessageMedia  } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
+
+const fs = require('fs');
+const path = require('path');
+
 
 let client;
 
@@ -122,7 +126,7 @@ const initializeClient = () => {
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (emailRegex.test(email)) {
                     userState.data.email = email;  // Almacena el correo electrónico proporcionado
-                    mensajeFinal='¡Gracias! Hemos recibido la siguiente información:\nNombre:'+ userState.data.name +' '+ userState.data.lastName+'\nCiudad: '+ userState.data.ciudad +'\nEmail: '+userState.data.email;
+                    mensajeFinal='¡Gracias! Hemos recibido la siguiente información:\nNombre:'+ userState.data.name +' '+ userState.data.lastName+'\nCiudad: '+ userState.data.ciudad +'\nEmail: '+userState.data.email +'\nEn breve se te asignara un agente  ';
                     await client.sendMessage(msg.from, `¡Gracias! Hemos recibido la siguiente información:\nNombre: ${userState.data.name} ${userState.data.lastName}\nCédula: ${userState.data.ciudad}\nEmail: ${userState.data.email}`);
                     //await client.sendMessage(msg.from, mensajeFinal);
                     
@@ -249,18 +253,32 @@ initializeClient();
 exports.sendMessage = async (req, res) => {
     console.log("req");
     //console.log(req);
-    const { pers_id_sender,number, message } = req.body;
+    const { pers_id_sender,number, message, media } = req.body;
 
     try {
         const chatId = `${number}@c.us`;
+        console.log(media);
+        if(media == null){ 
+            const response = await client.sendMessage(chatId, message);
+            console.log(response);
+            
+         }else{
 
-        const response = await client.sendMessage(chatId, message);
-        console.log(response);
+            const mediaUrl = `http://localhost:3000/${media}`;
+            const responseImage = await fetch(mediaUrl);
+            console.log(responseImage)
+            if (!responseImage.ok) {
+                throw new Error(`Error al descargar la imagen: ${responseImage.statusText}`);
+            }
 
-         // Guarda el mensaje y la respuesta en la base de datos
-        /* const query = 'INSERT INTO messages (number, message, response) VALUES ($1, $2, $3) RETURNING *';
-         const values = [number, message, response.body];
-         */
+            const arrayBuffer = await responseImage.arrayBuffer();
+
+            const imageBuffer = Buffer.from(arrayBuffer);
+            const mediaSrc = new MessageMedia('image/jpeg', imageBuffer.toString('base64'));
+            
+            const response = await client.sendMessage(chatId, mediaSrc, { caption: message });
+            console.log(response);
+        } 
 
         
         console.log(`Mensaje enviado a en  la que si usaaaa ${number}: ${message}`);
@@ -300,10 +318,10 @@ exports.sendMessage = async (req, res) => {
 
     } catch (error) {
         console.error(`Error al enviar el mensaje: ${error}`);
-        res.status(500).json({
+        /* res.status(500).json({
             success: false,
             error: `Error al enviar el mensaje: ${error.message}`
-        });
+        }); */
     }
 };
 

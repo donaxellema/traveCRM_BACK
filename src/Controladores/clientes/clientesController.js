@@ -101,7 +101,7 @@ const getClientesCRUD = async (req, res) => {
       console.log("respuesta")
       console.log(respuesta)
       if (respuesta.status === 'ok' && respuesta.code === 200) {
-        res.status(200).json({ code:respuesta.code, status: respuesta.status, message: respuesta.message, persona:respuesta.persona ,data:respuesta.data ,totalItems:respuesta.totalItems});
+        res.status(200).json({ code:respuesta.code, totalClientes:respuesta.totalClientes ,status: respuesta.status, message: respuesta.message, persona:respuesta.persona ,data:respuesta.data ,totalItems:respuesta.totalItems});
       } else {
         res.status(respuesta.code).json({ obj:obj, status: respuesta.status, message: respuesta.message });
       }

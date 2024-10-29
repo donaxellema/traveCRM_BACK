@@ -3,6 +3,8 @@ const express = require('express');
 const app = express();
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const { startDynamicCron } = require('./src/Controladores/botAsigna/botasignaController');
+
 //const dotenv = require('dotenv');
 
 //const userRoutes = require('./src/Routes/userRoutes');
@@ -19,8 +21,13 @@ const subirImagenBanner = require('./src/Routes/subirImagenRoute');
 const campanias = require('./src/Routes/campaniasRoutes'); 
 const perfil = require('./src/Routes/perfilRoutes'); 
 const chats = require('./src/Routes/chatsRoutes'); 
+const dashboard = require('./src/Routes/dashboardRoutes'); 
+
 
 const whatsapp = require('./src/Routes/whatsappRoutes'); 
+
+
+const cronRoutes = require('./src/Routes/robot.Routes');
 
 
 //dotenv.config();  // Esto carga el archivo .env
@@ -55,6 +62,7 @@ app.use('/api', agentes);
 app.use('/api', clientes);
 app.use('/api', campanias);
 app.use('/api', perfil);
+app.use('/api', dashboard);
 
 app.use('/api', chats);
 
@@ -64,6 +72,10 @@ app.use('/api', subirImagenBanner);
 
 
 app.use('/api', whatsapp);
+
+
+app.use('/api', cronRoutes);
+
 /* app.use('/api/personas',(req, res) => {
   res.send('¡Hola, mundo!');
 }); */
@@ -73,6 +85,15 @@ app.use('/api', whatsapp);
 
 
 // Iniciar el servidor y escuchar en el puerto especificado
-app.listen(port, () => {
+app.listen(port,async  () => {
   console.log(`Servidor escuchando en http://localhost:${port}`);
+
+
+    // Llamar a la función para iniciar el cron automáticamente
+    const currentCronJob = await startDynamicCron();
+    if (currentCronJob) {
+        console.log('Cron job started automatically on server startup');
+    } else {
+        console.error('Failed to start cron job automatically');
+    }
 });
