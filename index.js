@@ -8,6 +8,7 @@ const { startDynamicCron } = require('./src/Controladores/botAsigna/botasignaCon
 //const dotenv = require('dotenv');
 
 //const userRoutes = require('./src/Routes/userRoutes');
+const chatBot = require("./src/Routes/chatBotRoutes");
 const authRoutes = require('./src/Routes/authRoutes');
 const personRoutes = require('./src/Routes/personRoutes'); 
 const parametrosTiwilo = require('./src/Routes/paramTiwiloRoutes'); 
@@ -30,6 +31,8 @@ const whatsapp = require('./src/Routes/whatsappRoutes');
 const cronRoutes = require('./src/Routes/robot.Routes');
 
 
+const userRoutes = require('./src/Routes/FB_userRoutes');
+
 //dotenv.config();  // Esto carga el archivo .env
 // Definir el puerto en el que el servidor escuchará
 const port = 3000;
@@ -37,7 +40,8 @@ const port = 3000;
 
 const options = {
     cors: {
-        origin: "http://localhost:4200",
+        //origin: "http://localhost:4200",
+        origin: "*",
         methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
         allowedHeaders: ['Content-Type', 'Authorization']
         //methods: "POST",
@@ -72,6 +76,7 @@ app.use('/api', subirImagenBanner);
 
 
 app.use('/api', whatsapp);
+app.use('/api', chatBot);
 
 
 app.use('/api', cronRoutes);
@@ -82,6 +87,8 @@ app.use('/api', cronRoutes);
 //app.use('/api', userRoutes);
 
 
+//RUTAS CON FIREBASE
+app.use('/api', userRoutes);
 
 
 // Iniciar el servidor y escuchar en el puerto especificado

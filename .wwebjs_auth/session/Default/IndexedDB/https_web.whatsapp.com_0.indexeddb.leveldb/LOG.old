@@ -1,27 +1,15 @@
-2024/10/26-21:33:34.235 6208 Reusing MANIFEST C:\Users\alexd\OneDrive\Documents\GitHub\Trave\trave-CRM_BACKEND\traveCRM_BACK\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
-2024/10/26-21:33:34.242 6208 Recovering log #6810
-2024/10/26-21:33:34.527 6208 Reusing old log C:\Users\alexd\OneDrive\Documents\GitHub\Trave\trave-CRM_BACKEND\traveCRM_BACK\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/006810.log 
-2024/10/26-21:33:39.933 163c Level-0 table #6816: started
-2024/10/26-21:33:39.966 163c Level-0 table #6816: 401087 bytes OK
-2024/10/26-21:33:39.970 163c Delete type=0 #6810
-2024/10/26-21:33:39.971 163c Manual compaction at level-0 from ' s\x02\x00\x00\x00' @ 72057594037927935 : 1 .. ' t\x02\x00\x00\x00' @ 0 : 0; will stop at (end)
-2024/10/26-21:33:48.851 4610 Compacting 1@1 + 2@2 files
-2024/10/26-21:33:49.497 4610 Generated table #6817@1: 53191 keys, 2219339 bytes
-2024/10/26-21:33:49.565 4610 Generated table #6818@1: 17849 keys, 503110 bytes
-2024/10/26-21:33:49.565 4610 Compacted 1@1 + 2@2 files => 2722449 bytes
-2024/10/26-21:33:49.567 4610 compacted to: files[ 0 0 2 0 0 0 0 ]
-2024/10/26-21:33:49.569 4610 Delete type=2 #6812
-2024/10/26-21:33:49.569 4610 Delete type=2 #6813
-2024/10/26-21:33:49.569 4610 Delete type=2 #6816
-2024/10/27-19:30:33.609 65f4 Level-0 table #6820: started
-2024/10/27-19:30:33.690 65f4 Level-0 table #6820: 367527 bytes OK
-2024/10/27-19:30:33.704 65f4 Delete type=0 #6815
-2024/10/27-19:30:33.708 2790 Manual compaction at level-0 from ' t\x02\x00\x00\x00' @ 72057594037927935 : 1 .. ' u\x02\x00\x00\x00' @ 0 : 0; will stop at (end)
-2024/10/27-19:35:11.056 2790 Compacting 1@1 + 2@2 files
-2024/10/27-19:35:11.450 2790 Generated table #6821@1: 53704 keys, 2219105 bytes
-2024/10/27-19:35:11.592 2790 Generated table #6822@1: 18416 keys, 534098 bytes
-2024/10/27-19:35:11.592 2790 Compacted 1@1 + 2@2 files => 2753203 bytes
-2024/10/27-19:35:11.594 2790 compacted to: files[ 0 0 2 0 0 0 0 ]
-2024/10/27-19:35:11.595 2790 Delete type=2 #6817
-2024/10/27-19:35:11.596 2790 Delete type=2 #6818
-2024/10/27-19:35:11.596 2790 Delete type=2 #6820
+2024/11/21-21:40:56.416 5bc0 Reusing MANIFEST C:\Users\alexd\OneDrive\Documents\GitHub\Trave\trave-CRM_BACKEND\traveCRM_BACK\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2024/11/21-21:40:56.423 5bc0 Recovering log #9641
+2024/11/21-21:40:56.461 5bc0 Reusing old log C:\Users\alexd\OneDrive\Documents\GitHub\Trave\trave-CRM_BACKEND\traveCRM_BACK\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/009641.log 
+2024/11/21-21:41:00.226 1d9c Level-0 table #9647: started
+2024/11/21-21:41:00.242 1d9c Level-0 table #9647: 116992 bytes OK
+2024/11/21-21:41:00.246 1d9c Delete type=0 #9641
+2024/11/21-21:41:00.246 1d9c Manual compaction at level-0 from ' \x9a\x04\x00\x00\x00' @ 72057594037927935 : 1 .. ' \x9b\x04\x00\x00\x00' @ 0 : 0; will stop at (end)
+2024/11/21-21:41:00.383 4aa0 Compacting 1@1 + 2@2 files
+2024/11/21-21:41:00.661 4aa0 Generated table #9648@1: 59361 keys, 2234704 bytes
+2024/11/21-21:41:00.826 4aa0 Generated table #9649@1: 27492 keys, 1121878 bytes
+2024/11/21-21:41:00.826 4aa0 Compacted 1@1 + 2@2 files => 3356582 bytes
+2024/11/21-21:41:00.830 4aa0 compacted to: files[ 0 0 2 0 0 0 0 ]
+2024/11/21-21:41:00.831 4aa0 Delete type=2 #9643
+2024/11/21-21:41:00.831 4aa0 Delete type=2 #9644
+2024/11/21-21:41:00.831 4aa0 Delete type=2 #9647

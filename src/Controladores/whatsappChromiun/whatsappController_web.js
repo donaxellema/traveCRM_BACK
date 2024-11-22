@@ -40,7 +40,21 @@ const initializeClient = () => {
     });
 
 
+    const conversacion={
+        msg0:null,
+        msg0p:null,
+        msg1p:null,
+        msg1r:null,
+        msg2p:null,
+        msg2r:null,
+        msg3p:null,
+        msg3r:null,
+        msg4p:null,
+        msg4r:null,
+        //msg5p:null,
+        //msg5r:null,
 
+    }
 
 
     // Evento para recibir mensajes
@@ -52,8 +66,8 @@ const initializeClient = () => {
     if (msg.type === 'chat') {
         //console.log('Mensaje de texto recibido:', message.body);
         // Aquí puedes procesar el mensaje o almacenarlo en la base de datos
-
-        console.log(msg)
+        conversacion.msg0=msg.body;
+        console.log(msg.body)
         console.log(`Mensaje recibido desde el whatsapp del cliente  ${msg.from}: ${msg.body}`);
         let phoneNumber = msg.from.split('@')[0];
         console.log(phoneNumber)
@@ -89,7 +103,7 @@ const initializeClient = () => {
             dataEmp= respuesta.empresa[0]
             //const response = await client.sendMessage(chatId, message);            
             //const userState = conversationState[phoneNumber];
-
+            
             
             if (!conversationState[phoneNumber]) {
                 conversationState[phoneNumber] = { step: 'start', data: {} };;
@@ -100,34 +114,50 @@ const initializeClient = () => {
             
             // Flujo de preguntas según el estado del usuario
             if (userState.step === 'start') {
+                //msg0
+                conversacion.msg0p='Bienvenido a '+ dataEmp.emp_nombre +' \nDirección: '+ dataEmp.emp_camp1 +' \nen un momento te atenderemos?';
+                conversacion.msg1p='Ayudanos con algunos datos para brindarte una mejor experiencia. \n ¿Cuál es tu nombre?';
+
                 await client.sendMessage(msg.from, 'Bienvenido a '+ dataEmp.emp_nombre +' \nDirección: '+ dataEmp.emp_camp1 +' \nen un momento te atenderemos?');
                 await client.sendMessage(msg.from, 'Ayudanos con algunos datos para brindarte una mejor experiencia. \n ¿Cuál es tu nombre?');
                 userState.step = 'asking_name';  // Actualiza el estado
                 console.log(`Nuevo estado para ${phoneNumber}:`, userState); // Para verificar si cambia el estado
             } else if (userState.step === 'asking_name') {
                 userState.data.name = msg.body;  // Almacena el nombre proporcionado
+                conversacion.msg1r=msg.body;
+                conversacion.msg2p= `Gracias ${userState.data.name}, ¿Cuál es tu apellido?`;
+
                 await client.sendMessage(msg.from, `Gracias ${userState.data.name}, ¿Cuál es tu apellido?`);
                 userState.step = 'asking_lastname';  // Actualiza el estado
                 console.log(`Nuevo estado para ${phoneNumber}:`, userState); // Para verificar si cambia el estado
             } else if (userState.step === 'asking_lastname') {
                 userState.data.lastName = msg.body;  // Almacena el apellido proporcionado
+                
+                conversacion.msg2r=userState.data.lastName;
+                conversacion.msg3p= `Gracias, ${userState.data.name} ${userState.data.lastName}, ¿Desde dónde nos escribes?`;
+
                 await client.sendMessage(msg.from, `Gracias, ${userState.data.name} ${userState.data.lastName}, ¿Desde dónde nos escribes?`);
                 userState.step = 'asking_ciudad';  // Actualiza el estado
                 console.log(`Nuevo estado para ${phoneNumber}:`, userState); // Para verificar si cambia el estado
             } else if (userState.step === 'asking_ciudad') {
                 userState.data.ciudad = msg.body;  // Almacena la cédula proporcionada
+
+                conversacion.msg3r= userState.data.ciudad;
+                conversacion.msg4p= `Gracias, ${userState.data.name} ${userState.data.lastName}, ¿puedes proporcionarnos tu correo electrónico?`;
+
                 await client.sendMessage(msg.from, `Gracias, ${userState.data.name} ${userState.data.lastName}, ¿puedes proporcionarnos tu correo electrónico?`);
                 userState.step = 'asking_email'; 
             } else if (userState.step === 'asking_email') {
-
                 const email = msg.body;
 
                 // Validación del correo electrónico
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (emailRegex.test(email)) {
                     userState.data.email = email;  // Almacena el correo electrónico proporcionado
+                    conversacion.msg4r=userState.data.email;
+
                     mensajeFinal='¡Gracias! Hemos recibido la siguiente información:\nNombre:'+ userState.data.name +' '+ userState.data.lastName+'\nCiudad: '+ userState.data.ciudad +'\nEmail: '+userState.data.email +'\nEn breve se te asignara un agente  ';
-                    await client.sendMessage(msg.from, `¡Gracias! Hemos recibido la siguiente información:\nNombre: ${userState.data.name} ${userState.data.lastName}\nCédula: ${userState.data.ciudad}\nEmail: ${userState.data.email}`);
+                    await client.sendMessage(msg.from, `¡Gracias! Hemos recibido la siguiente información:\nNombre: ${userState.data.name} ${userState.data.lastName}\nCiudad: ${userState.data.ciudad}\nEmail: ${userState.data.email} '\nEn breve se te asignara un agente `);
                     //await client.sendMessage(msg.from, mensajeFinal);
                     
                     // Aquí puedes almacenar la información en la base de datos o procesarla de alguna manera
@@ -170,11 +200,20 @@ const initializeClient = () => {
                     const respuesta = result.rows[0].crm_clientepersona_v1;
                     if (respuesta.status === 'ok' && respuesta.code === 200) {
                         console.log(respuesta)
+                        //---- INICIA PART1
+                        console.log("INICA PART1")
+                        console.log(conversacion)
+
+
+
+
+
                         // SE HACE REGISTRO DE UN NUEVO CHAT
                         const obj_messageWhatsappBOT={
                             //pers_id_sender:pers_id_sender,
                             pers_id_sender:48, //ID DEL BOT 
                             number:phoneNumber,
+                            conversacionInicial:conversacion,
                             msg_contenido:mensajeFinal,
                             msg_tipo:'W',
                             chat_name:'Chat desde whatsapp'
@@ -190,6 +229,7 @@ const initializeClient = () => {
                             [obj_messageWhatsappBOT, opcionM, _limite, _offset]
                           );
                           const respuestaM = resultM.rows[0].crm_mensajes_v1;
+                          console.log(respuestaM);
                           if (respuestaM.status === 'ok' && respuestaM.code === 200) {
                             console.log(respuestaM)
                             //res.status(200).json({ code:respuesta.code, status: respuesta.status, message: respuesta.message, obj:respuesta.obj });
@@ -263,7 +303,7 @@ exports.sendMessage = async (req, res) => {
             console.log(response);
             
          }else{
-
+            //esta opcion es para poder ingresar la ruta de la imagen con localhost
             const mediaUrl = `http://localhost:3000/${media}`;
             const responseImage = await fetch(mediaUrl);
             console.log(responseImage)
@@ -324,6 +364,7 @@ exports.sendMessage = async (req, res) => {
         }); */
     }
 };
+
 
 exports.getContacts = async (req, res) => {
     try {
