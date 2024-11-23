@@ -9,7 +9,7 @@ const router = express.Router();
 router.post('/agentes_delete', authenticate, agentes.agentesCRUD);
 router.get('/agentes_verifica', authenticate, agentes.agentes_verifica);
 router.post('/agentes', authenticate, agentes.agentesCRUD);
-router.put('/agentes', authenticate, agentes.agentesCRUD);
+router.put('/agentes', authenticate, agentes.agentesCRUDU);
 router.get('/agentes_by_id', authenticate, agentes.getAgentesCRUD);
 router.get('/agentes_search', authenticate, agentes.get_agentesSearchCRUD);
 router.get('/agentes', authenticate, agentes.getAgentesCRUD);

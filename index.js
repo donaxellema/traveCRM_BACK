@@ -32,6 +32,8 @@ const cronRoutes = require('./src/Routes/robot.Routes');
 
 
 const userRoutes = require('./src/Routes/FB_userRoutes');
+//CARGA de archivos EXCEL
+const campaMasivaRoutes = require('./src/Routes/campaMasivaRoutes');
 
 //dotenv.config();  // Esto carga el archivo .env
 // Definir el puerto en el que el servidor escuchará
@@ -80,6 +82,7 @@ app.use('/api', chatBot);
 
 
 app.use('/api', cronRoutes);
+app.use('/api', campaMasivaRoutes);
 
 /* app.use('/api/personas',(req, res) => {
   res.send('¡Hola, mundo!');
