@@ -200,13 +200,6 @@ const initializeClient = () => {
                     const respuesta = result.rows[0].crm_clientepersona_v1;
                     if (respuesta.status === 'ok' && respuesta.code === 200) {
                         console.log(respuesta)
-                        //---- INICIA PART1
-                        console.log("INICA PART1")
-                        console.log(conversacion)
-
-
-
-
 
                         // SE HACE REGISTRO DE UN NUEVO CHAT
                         const obj_messageWhatsappBOT={
@@ -366,6 +359,23 @@ exports.sendMessage = async (req, res) => {
 };
 
 
+// Obtener contactos
+/* exports.getContacts = async (req, res) => {
+    if (!client) {
+        initializeClient();
+        await new Promise((resolve) => client.on('ready', resolve));
+    }
+
+    const chats = await client.getChats();
+    const contacts = chats.filter((chat) => !chat.isGroup).map((contact) => ({
+        name: contact.name || 'Sin nombre',
+        number: contact.id._serialized.split('@')[0]
+    }));
+
+    res.status(200).json({ contacts });
+}; */
+
+/*
 exports.getContacts = async (req, res) => {
     try {
         if (!client) {
@@ -395,32 +405,159 @@ exports.getContacts = async (req, res) => {
         console.error('Error al obtener la lista de contactos:', error);
         res.status(500).json({ error: 'Error al obtener la lista de contactos.' });
     }
-};
+};*/
 
 
 
-//module.exports = { sendMessage, getContacts };
-
-/* exports.getContacts = async (req, res) => {
+/*
+exports.getContacts = async (req, res) => {
     try {
+        if (!client) {
+            console.log('Inicializando cliente de WhatsApp...');
+            initializeClient();
+            await new Promise(resolve => client.on('ready', resolve)); // Esperar a que esté listo
+        }
+
+        console.log('Cliente conectado, obteniendo chats...');
         const chats = await client.getChats();
 
-        const contacts = await Promise.all(
-            chats
-                .filter(chat => !chat.isGroup)
-                .map(async (contact) => {
-                    const profilePicUrl = await client.getProfilePicUrl(contact.id._serialized);
-                    return {
-                        name: contact.name || contact.id.user,
-                        number: contact.id._serialized,
-                        profilePicUrl: profilePicUrl || 'Imagen no disponible'
-                    };
-                })
-        );
+        console.log(`Número de chats encontrados: ${chats.length}`);
 
-        res.status(200).json({ contacts });
+        // Filtra los chats para obtener solo los contactos (excluye grupos)
+        const contacts = chats.filter(chat => !chat.isGroup);
+
+        // Inserta los contactos en la base de datos
+        const promises = contacts.map(async (contact) => {
+            const name = contact.name || 'Sin nombre';
+            const number = contact.id.user;
+
+            try {
+                // Inserta contacto si no existe
+                await pool.query(
+                    `INSERT INTO whatsapp_contacts (name, number)
+                     VALUES ($1, $2)
+                     ON CONFLICT (number) DO NOTHING`,
+                    [name, number]
+                );
+            } catch (err) {
+                console.error(`Error al insertar el contacto ${name} (${number}):`, err);
+            }
+        });
+
+        await Promise.all(promises);
+
+        console.log('Contactos almacenados en la base de datos.');
+
+        res.status(200).json({
+            message: 'Contactos almacenados correctamente.',
+            contacts: contacts.map(contact => ({
+                name: contact.name || 'Sin nombre',
+                number: contact.id.user,
+            })),
+        });
     } catch (error) {
-        console.error('Error al obtener la lista de contactos:', error);
-        res.status(500).json({ error: 'Error al obtener la lista de contactos.' });
+        console.error('Error al obtener y almacenar la lista de contactos:', error);
+        res.status(500).json({ error: 'Error al obtener y almacenar la lista de contactos.' });
     }
-}; */
+};
+*/
+
+/*
+exports.getContacts = async (req, res) => {
+    try {
+        if (!client) {
+            console.log('Inicializando cliente de WhatsApp...');
+            initializeClient();
+            await new Promise(resolve => client.on('ready', resolve)); // Esperar a que esté listo
+        }
+
+        console.log('Cliente conectado, obteniendo chats...');
+        const chats = await client.getChats();
+
+        console.log(`Número total de chats encontrados: ${chats.length}`);
+
+        // Filtrar solo contactos, excluyendo grupos
+        const contacts = chats.filter(chat => !chat.isGroup && chat.id.server === 'c.us');
+
+        console.log(`Número de contactos encontrados: ${contacts.length}`);
+
+        // Procesar e insertar contactos en la base de datos
+        const promises = contacts.map(async (contact) => {
+            const name = contact.name || 'Sin nombre';
+            const number = contact.id.user; // Obtener el número del contacto
+            const etiqueta = 'Contacto de WhatsApp'; // Etiqueta predeterminada
+
+            try {
+                await pool.query(
+                    `INSERT INTO crm_whatsapp_contacts (
+                        contact_name, contact_etiqueta, contact_number
+                    ) VALUES ($1, $2, $3)
+                    ON CONFLICT (contact_number) DO NOTHING`,
+                    [name, etiqueta, number]
+                );
+            } catch (err) {
+                console.error(`Error al insertar el contacto ${name} (${number}):`, err);
+            }
+        });
+
+        // Esperar a que todos los contactos se procesen
+        await Promise.all(promises);
+
+        console.log('Contactos almacenados en la base de datos.');
+
+        // Responder con los contactos procesados
+        res.status(200).json({
+            message: 'Contactos procesados correctamente.',
+            contacts: contacts.map(contact => ({
+                name: contact.name || 'Sin nombre',
+                number: contact.id.user,
+            })),
+        });
+    } catch (error) {
+        console.error('Error al obtener y almacenar la lista de contactos:', error);
+        res.status(500).json({ error: 'Error al obtener y almacenar la lista de contactos.' });
+    }
+};*/
+
+
+
+exports.getContacts = async (req, res) => {
+    try {
+        if (!client) {
+            console.log('Inicializando cliente de WhatsApp...');
+            initializeClient();
+            await new Promise(resolve => client.on('ready', resolve));
+        }
+
+        console.log('Cliente conectado, obteniendo chats...');
+        const chats = await client.getChats();
+
+        console.log(`Número total de chats encontrados: ${chats.length}`);
+
+        // Filtrar solo contactos personales (no grupos)
+        const contacts = chats
+            .filter(chat => !chat.isGroup && chat.id.server === 'c.us')
+            .map(contact => ({
+                name: contact.name || 'Sin nombre',
+                number: contact.id.user,
+                etiqueta: 'Contacto de WhatsApp',
+            }));
+
+        console.log(`Número de contactos personales encontrados: ${contacts.length}`);
+
+        // Llamar al procedimiento almacenado
+        const contactsJson = JSON.stringify(contacts);
+        await pool.query('SELECT crm_contacts_from_whatsapp($1)', [contactsJson]);
+
+        console.log('Contactos almacenados exitosamente.');
+
+        res.status(200).json({
+            code: 200,
+            message: 'Contactos procesados y almacenados correctamente.',
+            //contacts,
+        });
+    } catch (error) {
+        console.error('Error al procesar los contactos:', error);
+        res.status(500).json({ error: 'Error al procesar los contactos.' });
+    }
+};
