@@ -1,3 +1,6 @@
-2024/11/27-05:48:03.737 2ce8 Reusing MANIFEST C:\Users\alexd\OneDrive\Documents\GitHub\Trave\trave-CRM_BACKEND\traveCRM_BACK\.wwebjs_auth\session\Default\Local Storage\leveldb/MANIFEST-000001
-2024/11/27-05:48:03.739 2ce8 Recovering log #263
-2024/11/27-05:48:03.740 2ce8 Reusing old log C:\Users\alexd\OneDrive\Documents\GitHub\Trave\trave-CRM_BACKEND\traveCRM_BACK\.wwebjs_auth\session\Default\Local Storage\leveldb/000263.log 
+2024/11/28-04:32:27.408 df0 Reusing MANIFEST C:\Users\alexd\OneDrive\Documents\GitHub\Trave\trave-CRM_BACKEND\traveCRM_BACK\.wwebjs_auth\session\Default\Local Storage\leveldb/MANIFEST-000001
+2024/11/28-04:32:27.410 df0 Recovering log #277
+2024/11/28-04:32:27.411 df0 Reusing old log C:\Users\alexd\OneDrive\Documents\GitHub\Trave\trave-CRM_BACKEND\traveCRM_BACK\.wwebjs_auth\session\Default\Local Storage\leveldb/000277.log 
+2024/11/28-04:33:28.626 243c Level-0 table #280: started
+2024/11/28-04:33:28.642 243c Level-0 table #280: 14414 bytes OK
+2024/11/28-04:33:28.646 243c Delete type=0 #277

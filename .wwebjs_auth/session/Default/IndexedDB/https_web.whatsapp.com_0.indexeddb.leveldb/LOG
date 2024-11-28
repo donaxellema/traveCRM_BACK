@@ -1,69 +1,39 @@
-2024/11/27-05:48:49.355 414c Reusing MANIFEST C:\Users\alexd\OneDrive\Documents\GitHub\Trave\trave-CRM_BACKEND\traveCRM_BACK\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
-2024/11/27-05:48:49.358 414c Recovering log #11671
-2024/11/27-05:48:49.402 414c Reusing old log C:\Users\alexd\OneDrive\Documents\GitHub\Trave\trave-CRM_BACKEND\traveCRM_BACK\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/011671.log 
-2024/11/27-05:48:52.965 371c Level-0 table #11685: started
-2024/11/27-05:48:52.981 371c Level-0 table #11685: 203374 bytes OK
-2024/11/27-05:48:52.984 371c Delete type=0 #11671
-2024/11/27-05:48:52.985 371c Manual compaction at level-0 from ' D\x06\x00\x00\x00' @ 72057594037927935 : 1 .. ' E\x06\x00\x00\x00' @ 0 : 0; will stop at ' D\x06\x00\x00\x05' @ 29446427 : 1
-2024/11/27-05:48:52.985 371c Compacting 1@0 + 1@1 files
-2024/11/27-05:48:53.009 371c Generated table #11686@0: 5309 keys, 102342 bytes
-2024/11/27-05:48:53.024 371c Generated table #11687@0: 25 keys, 1058 bytes
-2024/11/27-05:48:53.024 371c Compacted 1@0 + 1@1 files => 103400 bytes
-2024/11/27-05:48:53.026 371c compacted to: files[ 0 2 17 0 0 0 0 ]
-2024/11/27-05:48:53.027 371c Delete type=2 #11685
-2024/11/27-05:48:53.027 371c Manual compaction at level-0 from ' D\x06\x00\x00\x05' @ 29446427 : 1 .. ' E\x06\x00\x00\x00' @ 0 : 0; will stop at (end)
-2024/11/27-05:48:53.072 371c Compacting 1@1 + 9@2 files
-2024/11/27-05:48:53.253 371c Generated table #11688@1: 83201 keys, 2299833 bytes
-2024/11/27-05:48:53.390 371c Generated table #11689@1: 21725 keys, 2166332 bytes
-2024/11/27-05:48:53.579 371c Generated table #11690@1: 40378 keys, 2203704 bytes
-2024/11/27-05:48:53.653 371c Generated table #11691@1: 1889 keys, 2148263 bytes
-2024/11/27-05:48:53.731 371c Generated table #11692@1: 2153 keys, 2148095 bytes
-2024/11/27-05:48:53.831 371c Generated table #11693@1: 9690 keys, 2165965 bytes
-2024/11/27-05:48:53.994 371c Generated table #11694@1: 30034 keys, 2263051 bytes
-2024/11/27-05:48:54.113 371c Generated table #11695@1: 23218 keys, 2194937 bytes
-2024/11/27-05:48:54.127 371c Generated table #11696@1: 1201 keys, 194746 bytes
-2024/11/27-05:48:54.127 371c Compacted 1@1 + 9@2 files => 17784926 bytes
-2024/11/27-05:48:54.130 371c compacted to: files[ 0 1 17 0 0 0 0 ]
-2024/11/27-05:48:54.130 371c Delete type=2 #11618
-2024/11/27-05:48:54.130 371c Delete type=2 #11674
-2024/11/27-05:48:54.130 371c Delete type=2 #11675
-2024/11/27-05:48:54.130 371c Delete type=2 #11676
-2024/11/27-05:48:54.130 371c Delete type=2 #11677
-2024/11/27-05:48:54.131 371c Delete type=2 #11678
-2024/11/27-05:48:54.131 371c Delete type=2 #11679
-2024/11/27-05:48:54.131 371c Delete type=2 #11680
-2024/11/27-05:48:54.131 371c Delete type=2 #11681
-2024/11/27-05:48:54.131 371c Delete type=2 #11682
-2024/11/27-05:48:54.131 371c Delete type=2 #11686
-2024/11/27-06:30:10.441 15b0 Level-0 table #11698: started
-2024/11/27-06:30:10.483 15b0 Level-0 table #11698: 933172 bytes OK
-2024/11/27-06:30:10.486 15b0 Delete type=0 #11684
-2024/11/27-06:30:10.490 15b0 Compacting 1@0 + 1@1 files
-2024/11/27-06:30:10.557 15b0 Generated table #11699@0: 16227 keys, 308988 bytes
-2024/11/27-06:30:10.573 15b0 Generated table #11700@0: 31 keys, 1092 bytes
-2024/11/27-06:30:10.573 15b0 Compacted 1@0 + 1@1 files => 310080 bytes
-2024/11/27-06:30:10.575 15b0 compacted to: files[ 0 2 17 0 0 0 0 ]
-2024/11/27-06:30:24.537 15b0 Compacting 1@1 + 9@2 files
-2024/11/27-06:30:24.698 15b0 Generated table #11701@1: 84533 keys, 2302583 bytes
-2024/11/27-06:30:24.821 15b0 Generated table #11702@1: 21807 keys, 2164277 bytes
-2024/11/27-06:30:24.985 15b0 Generated table #11703@1: 41059 keys, 2202951 bytes
-2024/11/27-06:30:25.046 15b0 Generated table #11704@1: 1909 keys, 2151544 bytes
-2024/11/27-06:30:25.096 15b0 Generated table #11705@1: 2123 keys, 2149615 bytes
-2024/11/27-06:30:25.173 15b0 Generated table #11706@1: 8944 keys, 2160468 bytes
-2024/11/27-06:30:25.331 15b0 Generated table #11707@1: 27645 keys, 2265013 bytes
-2024/11/27-06:30:25.485 15b0 Generated table #11708@1: 26435 keys, 2206361 bytes
-2024/11/27-06:30:25.499 15b0 Generated table #11709@1: 1219 keys, 273139 bytes
-2024/11/27-06:30:25.499 15b0 Compacted 1@1 + 9@2 files => 17875951 bytes
-2024/11/27-06:30:25.501 15b0 compacted to: files[ 0 1 17 0 0 0 0 ]
-2024/11/27-06:30:25.502 15b0 Delete type=2 #11687
-2024/11/27-06:30:25.502 15b0 Delete type=2 #11688
-2024/11/27-06:30:25.502 15b0 Delete type=2 #11689
-2024/11/27-06:30:25.502 15b0 Delete type=2 #11690
-2024/11/27-06:30:25.502 15b0 Delete type=2 #11691
-2024/11/27-06:30:25.502 15b0 Delete type=2 #11692
-2024/11/27-06:30:25.502 15b0 Delete type=2 #11693
-2024/11/27-06:30:25.502 15b0 Delete type=2 #11694
-2024/11/27-06:30:25.502 15b0 Delete type=2 #11695
-2024/11/27-06:30:25.502 15b0 Delete type=2 #11696
-2024/11/27-06:30:25.502 15b0 Delete type=2 #11698
-2024/11/27-06:30:25.502 15b0 Delete type=2 #11699
+2024/11/28-04:35:11.203 3264 Reusing MANIFEST C:\Users\alexd\OneDrive\Documents\GitHub\Trave\trave-CRM_BACKEND\traveCRM_BACK\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2024/11/28-04:35:11.211 3264 Recovering log #12542
+2024/11/28-04:35:11.310 3264 Reusing old log C:\Users\alexd\OneDrive\Documents\GitHub\Trave\trave-CRM_BACKEND\traveCRM_BACK\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/012542.log 
+2024/11/28-04:35:12.853 3d2c Level-0 table #12558: started
+2024/11/28-04:35:12.871 3d2c Level-0 table #12558: 245858 bytes OK
+2024/11/28-04:35:12.875 3d2c Delete type=0 #12542
+2024/11/28-04:35:12.876 3d2c Manual compaction at level-0 from ' p\x06\x00\x00\x00' @ 72057594037927935 : 1 .. ' q\x06\x00\x00\x00' @ 0 : 0; will stop at ' p\x06\x00\x00\x05' @ 30509011 : 1
+2024/11/28-04:35:12.876 3d2c Compacting 1@0 + 1@1 files
+2024/11/28-04:35:12.910 3d2c Generated table #12559@0: 6607 keys, 119463 bytes
+2024/11/28-04:35:12.929 3d2c Generated table #12560@0: 158 keys, 3311 bytes
+2024/11/28-04:35:12.929 3d2c Compacted 1@0 + 1@1 files => 122774 bytes
+2024/11/28-04:35:12.931 3d2c compacted to: files[ 0 2 18 0 0 0 0 ]
+2024/11/28-04:35:12.931 3d2c Delete type=2 #12558
+2024/11/28-04:35:12.932 3d2c Manual compaction at level-0 from ' p\x06\x00\x00\x05' @ 30509011 : 1 .. ' q\x06\x00\x00\x00' @ 0 : 0; will stop at (end)
+2024/11/28-04:35:13.008 3d2c Compacting 1@1 + 10@2 files
+2024/11/28-04:35:13.211 3d2c Generated table #12561@1: 90415 keys, 2243224 bytes
+2024/11/28-04:35:13.493 3d2c Generated table #12562@1: 85562 keys, 2306600 bytes
+2024/11/28-04:35:13.608 3d2c Generated table #12563@1: 21732 keys, 2165674 bytes
+2024/11/28-04:35:13.779 3d2c Generated table #12564@1: 40576 keys, 2200176 bytes
+2024/11/28-04:35:13.847 3d2c Generated table #12565@1: 1913 keys, 2152727 bytes
+2024/11/28-04:35:13.912 3d2c Generated table #12566@1: 2071 keys, 2143643 bytes
+2024/11/28-04:35:13.996 3d2c Generated table #12567@1: 1952 keys, 2142420 bytes
+2024/11/28-04:35:14.230 3d2c Generated table #12568@1: 25870 keys, 2252878 bytes
+2024/11/28-04:35:14.548 3d2c Generated table #12569@1: 39530 keys, 2238793 bytes
+2024/11/28-04:35:14.585 3d2c Generated table #12570@1: 3010 keys, 399070 bytes
+2024/11/28-04:35:14.585 3d2c Compacted 1@1 + 10@2 files => 20245205 bytes
+2024/11/28-04:35:14.587 3d2c compacted to: files[ 0 1 18 0 0 0 0 ]
+2024/11/28-04:35:14.588 3d2c Delete type=2 #12545
+2024/11/28-04:35:14.588 3d2c Delete type=2 #12546
+2024/11/28-04:35:14.588 3d2c Delete type=2 #12547
+2024/11/28-04:35:14.588 3d2c Delete type=2 #12548
+2024/11/28-04:35:14.588 3d2c Delete type=2 #12549
+2024/11/28-04:35:14.588 3d2c Delete type=2 #12550
+2024/11/28-04:35:14.588 3d2c Delete type=2 #12551
+2024/11/28-04:35:14.588 3d2c Delete type=2 #12552
+2024/11/28-04:35:14.588 3d2c Delete type=2 #12553
+2024/11/28-04:35:14.588 3d2c Delete type=2 #12554
+2024/11/28-04:35:14.588 3d2c Delete type=2 #12555
+2024/11/28-04:35:14.588 3d2c Delete type=2 #12559

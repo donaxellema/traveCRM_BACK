@@ -554,7 +554,8 @@ exports.getContacts = async (req, res) => {
         res.status(200).json({
             code: 200,
             message: 'Contactos procesados y almacenados correctamente.',
-            //contacts,
+            total: chats.length,
+            data:contacts,
         });
     } catch (error) {
         console.error('Error al procesar los contactos:', error);

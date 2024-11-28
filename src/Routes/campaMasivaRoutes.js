@@ -1,12 +1,20 @@
 const express = require('express');
-//const agentes  = require('../Controladores/agentes/agentesController');
-const authenticate = require('../Middleware/authentication');
-//const { agentesCRUD } = require('../Controladores/agentes/agentesController');
-const campamasivas  = require('../Controladores/campañasMasivas/campMasivaController');
-
 const router = express.Router();
 
+// Importa multer
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
-router.post('/uploadcontac', authenticate, campamasivas.uploadFile);
+const {uploadContacts}  = require('../Controladores/campañasMasivas/campMasivaController');
+
+
+
+//router.post('/uploadcontac', authenticate, campamasivas.uploadFile);
+
+
+
+router.post('/upload-contacts', upload.single('file'), uploadContacts);
+
+
 
 module.exports = router;
