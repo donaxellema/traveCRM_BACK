@@ -6,6 +6,8 @@ const {generateToken} = require('../../Middleware/authentication')
 //Obtener empresa
 const getEmpresasCRUD = async (req, res) => {
     const obj1 = req.query
+    console.log("obj1")
+    console.log(obj1)
   
     const obj = {param_tipo:obj1.param_tipo}
     const { opcion} = req.query;

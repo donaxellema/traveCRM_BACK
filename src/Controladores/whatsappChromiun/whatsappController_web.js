@@ -7,10 +7,51 @@ const qrcode = require('qrcode-terminal');
 const fs = require('fs');
 const path = require('path');
 
+//controladores
+const { getEmpresasCRUD } = require('../../Controladores/empresas/empresasController');
+
+
+
+
 
 let client;
 
+let empresas_data;
+
+const llamarEmpresas = async () => {
+    console.log("first******************")
+    let respuestaCapturada;
+
+    const req = {
+        query: {
+            param_tipo: '',
+            opcion: 'C',
+        },
+    };
+    const res = {
+        status: (statusCode) => ({
+            json: (responseBody) => (
+                respuestaCapturada={ statusCode, responseBody }
+            ),
+        }),
+    };
+
+    try {
+        // Simplemente invocar la función con los mismos req y res
+        //await getEmpresasCRUD(req, res);
+        await getEmpresasCRUD(req, res);
+        empresas_data=respuestaCapturada;
+        console.log('Respuesta obtenida::::::::::::::', JSON.stringify(respuestaCapturada.responseBody.data[0].emp_nombre) );
+        return respuestaCapturada; // Retorna la respuesta si es necesario
+
+    } catch (error) {
+        res.status(500).json({ status: 'error', message: 'Error al llamar a getEmpresasCRUD', details: error.message });
+    }
+};
+
+
 const initializeClient = () => {
+    
     if (client) return; // Evita la inicialización múltiple
 
     client = new Client({
@@ -39,248 +80,282 @@ const initializeClient = () => {
         client = null; // Permite reiniciar el cliente si se desconecta
     });
 
-
-    const conversacion={
-        msg0:null,
-        msg0p:null,
-        msg1p:null,
-        msg1r:null,
-        msg2p:null,
-        msg2r:null,
-        msg3p:null,
-        msg3r:null,
-        msg4p:null,
-        msg4r:null,
-        //msg5p:null,
-        //msg5r:null,
-
-    }
+    // Definir el estado inicial de la conversación
+    const conversacion = {
+        msg0: null,
+        msg0p: null,
+        msg1p: null,
+        msg1r: null,
+        msg2p: null,
+        msg2r: null,
+        msg3p: null,
+        msg3r: null,
+        msg4p: null,
+        msg4r: null,
+    };
 
 
-    // Evento para recibir mensajes
+    
+
+    // Estado de las conversaciones por número de teléfono
     const conversationState = {};
-    let mensajeFinal='';
+    let mensajeFinal = '';
     let dataEmp;
+
     client.on('message', async (msg) => {
-        // Verificar si el tipo de mensaje es de texto ('chat')
-    if (msg.type === 'chat') {
-        //console.log('Mensaje de texto recibido:', message.body);
-        // Aquí puedes procesar el mensaje o almacenarlo en la base de datos
-        conversacion.msg0=msg.body;
-        console.log(msg.body)
-        console.log(`Mensaje recibido desde el whatsapp del cliente  ${msg.from}: ${msg.body}`);
-        let phoneNumber = msg.from.split('@')[0];
-        console.log(phoneNumber)
-        const obj_messageWhatsapp={
-            //pers_id_sender:pers_id_sender,
-            number:phoneNumber,
-            msg_contenido:msg.body,
-            msg_tipo:'W',
-            chat_name:'Chat desde whatsapp'
-        } 
+        //llamarEmpresas();
         
-        //RESPUESTA DEL CHAT
-        const opcion="R_W_CHAT";
-        const _limite=0;
-        const _offset=0;
-
         
-        const result = await pool.query(
-            'SELECT crm_mensajes_v1($1, $2, $3, $4)',
-            [obj_messageWhatsapp, opcion, _limite, _offset]
-          );
-          const respuesta = result.rows[0].crm_mensajes_v1;
-          console.log("respuesta ++++++++++++++++++++++++++++++++++++++++")
-          console.log(respuesta)
-          if (respuesta.status === 'ok' && respuesta.code === 200) {
-            console.log(respuesta)
-            //res.status(200).json({ code:respuesta.code, status: respuesta.status, message: respuesta.message, obj:respuesta.obj });
-          } else if (respuesta.status === 'ok' && respuesta.code === 400) {
-            
-            const message="El usuario no se encuentra registrado en el sistema";
-            const chatId = `${phoneNumber}@c.us`;
-            console.log(respuesta)
-            dataEmp= respuesta.empresa[0]
-            //const response = await client.sendMessage(chatId, message);            
-            //const userState = conversationState[phoneNumber];
-            
-            
-            if (!conversationState[phoneNumber]) {
-                conversationState[phoneNumber] = { step: 'start', data: {} };;
-            }
-            
-            const userState = conversationState[phoneNumber];
-            console.log(`Estado actual para ${phoneNumber}:`, userState); // Para verificar el estado del usuario
-            
-            // Flujo de preguntas según el estado del usuario
-            if (userState.step === 'start') {
-                //msg0
-                conversacion.msg0p='Bienvenido a '+ dataEmp.emp_nombre +' \nDirección: '+ dataEmp.emp_camp1 +' \nen un momento te atenderemos?';
-                conversacion.msg1p='Ayudanos con algunos datos para brindarte una mejor experiencia. \n ¿Cuál es tu nombre?';
+        
+        // Diccionario de palabras clave
+        const keywords = {
+            envio: '👋 ¡Si! realizamos envios a nivel *nacional* ',
+            envios: '¡Si! realizamos envios a nivel *nacional* ',
+            'buena tarde': '👋 ¡Bienvenido estimado! Soy el bot de soporte de *'+ empresas_data.responseBody.data[0].emp_nombre +'*. ¿En qué puedo ayudarte hoy?',
+            'buenas tardes': '👋 ¡Bienvenido estimado! Soy el bot de soporte de *'+ empresas_data.responseBody.data[0].emp_nombre +'*. ¿En qué puedo ayudarte hoy?',
+            'buen día': '👋 ¡Bienvenido estimado! Soy el bot de soporte de *'+ empresas_data.responseBody.data[0].emp_nombre +'*. ¿En qué puedo ayudarte hoy?',
+            'buenos días': '👋 ¡Bienvenido estimado! Soy el bot de soporte de *'+ empresas_data.responseBody.data[0].emp_nombre +'*. ¿En qué puedo ayudarte hoy?',
+            hola: '👋 ¡Bienvenido estimado! Soy el bot de soporte de *'+ empresas_data.responseBody.data[0].emp_nombre +'*. ¿En qué puedo ayudarte hoy?',
+            producto: async (msg, userState) => {
+                userState.step = 'start';
+                conversacion.msg0p='📦 Para brindarte información sobre productos, primero necesitamos que estés registrado.';
+                await client.sendMessage(
+                    msg.from,
+                    '📦 Para brindarte información sobre productos, primero necesitamos que estés registrado.'
+                );
+                //userState.step = 'asking_name';
+            },
 
-                await client.sendMessage(msg.from, 'Bienvenido a '+ dataEmp.emp_nombre +' \nDirección: '+ dataEmp.emp_camp1 +' \nen un momento te atenderemos?');
-                await client.sendMessage(msg.from, 'Ayudanos con algunos datos para brindarte una mejor experiencia. \n ¿Cuál es tu nombre?');
-                userState.step = 'asking_name';  // Actualiza el estado
-                console.log(`Nuevo estado para ${phoneNumber}:`, userState); // Para verificar si cambia el estado
-            } else if (userState.step === 'asking_name') {
-                userState.data.name = msg.body;  // Almacena el nombre proporcionado
-                conversacion.msg1r=msg.body;
-                conversacion.msg2p= `Gracias ${userState.data.name}, ¿Cuál es tu apellido?`;
+            ayuda: 'ℹ️ Estoy aquí para ayudarte. Puedes escribir "hola" para empezar o preguntar por productos.',
+        };
+        //FIN DE DICCIONARIO
 
-                await client.sendMessage(msg.from, `Gracias ${userState.data.name}, ¿Cuál es tu apellido?`);
-                userState.step = 'asking_lastname';  // Actualiza el estado
-                console.log(`Nuevo estado para ${phoneNumber}:`, userState); // Para verificar si cambia el estado
-            } else if (userState.step === 'asking_lastname') {
-                userState.data.lastName = msg.body;  // Almacena el apellido proporcionado
+
+    
+        if (msg.type === 'chat') {
+            console.log(`Mensaje recibido desde el WhatsApp del cliente ${msg.from}: ${msg.body}`);
+            let phoneNumber = msg.from.split('@')[0];
+            const obj_messageWhatsapp = {
+                number: phoneNumber,
+                msg_contenido: msg.body,
+                msg_tipo: 'W',
+                chat_name: 'Chat desde WhatsApp'
+            };
+
+            // Obtener respuesta del sistema
+            const opcion = "R_W_CHAT";
+            const _limite = 0;
+            const _offset = 0;
+
+            const result = await pool.query(
+                'SELECT crm_mensajes_v1($1, $2, $3, $4)',
+                [obj_messageWhatsapp, opcion, _limite, _offset]
+            );
+
+            const respuesta = result.rows[0].crm_mensajes_v1;
+
+            if (respuesta.status === 'ok' && respuesta.code === 200) {
+                console.log(respuesta);
+            } else if (respuesta.status === 'ok' && respuesta.code === 400) {
+                const message = "El usuario no se encuentra registrado en el sistema";
+                const chatId = `${phoneNumber}@c.us`;
+                dataEmp = respuesta.empresa[0];
+                //inicio
                 
-                conversacion.msg2r=userState.data.lastName;
-                conversacion.msg3p= `Gracias, ${userState.data.name} ${userState.data.lastName}, ¿Desde dónde nos escribes?`;
+                if (!conversationState[phoneNumber]) {
+                    conversationState[phoneNumber] = { step: 'null', data: {} };
+                }
+                
+                const userState = conversationState[phoneNumber];
+                console.log(`Estado actual para ${phoneNumber}:`, userState);
+                
+                // Buscar palabras clave en el mensaje
+                /* const matchedKeyword = Object.keys(keywords).find((key) =>
+                    message.includes(key)
+                ); */
 
-                await client.sendMessage(msg.from, `Gracias, ${userState.data.name} ${userState.data.lastName}, ¿Desde dónde nos escribes?`);
-                userState.step = 'asking_ciudad';  // Actualiza el estado
-                console.log(`Nuevo estado para ${phoneNumber}:`, userState); // Para verificar si cambia el estado
-            } else if (userState.step === 'asking_ciudad') {
-                userState.data.ciudad = msg.body;  // Almacena la cédula proporcionada
 
-                conversacion.msg3r= userState.data.ciudad;
-                conversacion.msg4p= `Gracias, ${userState.data.name} ${userState.data.lastName}, ¿puedes proporcionarnos tu correo electrónico?`;
+                /* const cleanedMessage = message.trim();  // Eliminar espacios alrededor del mensaje
+                const matchedKeyword = Object.keys(keywords).find((key) =>
+                    cleanedMessage.toLowerCase().includes(key)
+                );
+                
+                console.log("matchedKeyword:", matchedKeyword); */
+                const messageLowerCase = msg.body.trim().toLowerCase();  // Limpiar y convertir a minúsculas
+                console.log("messageLowerCase")
+                console.log(messageLowerCase)
+                const matchedKeyword = Object.keys(keywords).find((key) =>
+                    messageLowerCase.includes(key)  // Comparar con la versión limpia y en minúsculas
+                );
+                console.log("matchedKeyword");
+                console.log(matchedKeyword);
 
-                await client.sendMessage(msg.from, `Gracias, ${userState.data.name} ${userState.data.lastName}, ¿puedes proporcionarnos tu correo electrónico?`);
-                userState.step = 'asking_email'; 
-            } else if (userState.step === 'asking_email') {
-                const email = msg.body;
-
-                // Validación del correo electrónico
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (emailRegex.test(email)) {
-                    userState.data.email = email;  // Almacena el correo electrónico proporcionado
-                    conversacion.msg4r=userState.data.email;
-
-                    mensajeFinal='¡Gracias! Hemos recibido la siguiente información:\nNombre:'+ userState.data.name +' '+ userState.data.lastName+'\nCiudad: '+ userState.data.ciudad +'\nEmail: '+userState.data.email +'\nEn breve se te asignara un agente  ';
-                    await client.sendMessage(msg.from, `¡Gracias! Hemos recibido la siguiente información:\nNombre: ${userState.data.name} ${userState.data.lastName}\nCiudad: ${userState.data.ciudad}\nEmail: ${userState.data.email} '\nEn breve se te asignara un agente `);
-                    //await client.sendMessage(msg.from, mensajeFinal);
-                    
-                    // Aquí puedes almacenar la información en la base de datos o procesarla de alguna manera
-                    //console.log(`Usuario: ${userState.data.name} ${userState.data.lastName}, Ciudad: ${userState.data.ciudad}, Email: ${userState.data.email}`);
-                    
-                    // Reiniciar el estado de la conversación
-                    delete conversationState[phoneNumber];
-                    console.log(`Estado eliminado para ${phoneNumber}.`);
-
-                    //AQUI SE AGREGA EL PROCESO DE INGRESAR O LLAMAR AL API DE                     
-                    //OBJETO DE PERSONA PARA EL INGRESO DENTRO DEL SISTEMA
-                    const personas={
-                        etiq_id:1,
-                        pers_nombres:userState.data.name,
-                        pers_apellidos:userState.data.lastName,
-                        pers_telefono:phoneNumber,                        
-                        pers_ciudad:userState.data.ciudad,
-                        usuario:'BOT'
+                
+                if (matchedKeyword) {
+                    const response = keywords[matchedKeyword];
+                
+                    // Verificar si la respuesta es una función o texto
+                    if (typeof response === 'function') {
+                        userState.step = 'start';
+                        await response(msg, userState);
+                    } else {
+                        await client.sendMessage(msg.from, response);
                     }
-                    console.log("objeto persona");
-                    console.log(personas);
-                    
-                    const new_Obj={
-                        personas:personas,
-                        usu_email:userState.data.email,
-                        usu_nickname:'cliente',
-                        usu_password1:null,
-                        usu_password2:null,
-                        usu_imagen:null,
-                        usuario:'BOT',
-                        etiq_id:1,
+                } else if(userState.step == 'start' || userState.step == 'asking_name' || userState.step == 'asking_lastname' || userState.step == 'asking_ciudad' || userState.step == 'asking_email' )
+                    {
+                        
+                    }else
+                    { 
+                    await client.sendMessage(
+                        msg.from,
+                        '🤔 No entendí tu mensaje. Escribe "hola" para empezar o "ayuda" para más información.'
+                    );
+                }
+                
+                // Flujo de preguntas según el estado del usuario
+                switch (userState.step) {
+                    case 'start': {
+                        //conversacion.msg0p = `Bienvenido a ${dataEmp.emp_nombre} \nDirección: ${dataEmp.emp_camp1}\nEn un momento te atenderemos.`;
+                        //conversacion.msg1p = 'Ayúdanos con algunos datos para brindarte una mejor experiencia. ¿Cuál es tu nombre?';
+                        conversacion.msg1p = '😊 Comencemos con tus datos. Por favor, dime tu *nombre*.';
+                
+                        //await client.sendMessage(msg.from, conversacion.msg0p);
+                        await client.sendMessage(msg.from, conversacion.msg1p);
+                        userState.step = 'asking_name';
+                        break;
                     }
-
-                    const result = await pool.query(
-                        'SELECT crm_clientepersona_v1($1, $2, $3, $4)',
-                        [new_Obj, "I", _limite, _offset]
-                      );
-                    
-
-                    const respuesta = result.rows[0].crm_clientepersona_v1;
-                    if (respuesta.status === 'ok' && respuesta.code === 200) {
-                        console.log(respuesta)
-
-                        // SE HACE REGISTRO DE UN NUEVO CHAT
-                        const obj_messageWhatsappBOT={
-                            //pers_id_sender:pers_id_sender,
-                            pers_id_sender:48, //ID DEL BOT 
-                            number:phoneNumber,
-                            conversacionInicial:conversacion,
-                            msg_contenido:mensajeFinal,
-                            msg_tipo:'W',
-                            chat_name:'Chat desde whatsapp'
-                        } 
-                        
-                        //RESPUESTA DEL CHAT
-                        const opcionM="I_W_CHAT";
-                        const _limite=0;
-                        const _offset=0;
-                        
-                        const resultM = await pool.query(
-                            'SELECT crm_mensajes_v1($1, $2, $3, $4)',
-                            [obj_messageWhatsappBOT, opcionM, _limite, _offset]
-                          );
-                          const respuestaM = resultM.rows[0].crm_mensajes_v1;
-                          console.log(respuestaM);
-                          if (respuestaM.status === 'ok' && respuestaM.code === 200) {
-                            console.log(respuestaM)
-                            //res.status(200).json({ code:respuesta.code, status: respuesta.status, message: respuesta.message, obj:respuesta.obj });
-                          } else if (respuestaM.status === 'ok' && respuestaM.code === 400) {
-
-                          }
-
-
-
-
-
-                        //res.status(200).json({ code:respuesta.code, status: respuesta.status, message: respuesta.message, obj:respuesta.obj });
-                    } else if (respuesta.status === 'ok' && respuesta.code === 400) {
-                        
+                
+                    case 'asking_name': {
+                        userState.data.name = msg.body;
+                        conversacion.msg1r=msg.body;
+                        conversacion.msg2p = `Gracias ${userState.data.name}, ¿Cuál es tu apellido?`;
+                
+                        await client.sendMessage(msg.from, conversacion.msg2p);
+                        userState.step = 'asking_lastname';
+                        break;
                     }
-
-
-
-
-                } else {
-                    // Si el email no es válido, enviar un mensaje y esperar a que el usuario lo ingrese nuevamente
-                    await client.sendMessage(msg.from, 'El correo proporcionado no es válido. Por favor, ingresa un correo electrónico válido.');
+                
+                    case 'asking_lastname': {
+                        userState.data.lastName = msg.body;
+                        conversacion.msg2r=userState.data.lastName;
+                        conversacion.msg3p = `Gracias, ${userState.data.name} ${userState.data.lastName}, ¿Desde dónde nos escribes?`;
+                
+                        await client.sendMessage(msg.from, conversacion.msg3p);
+                        userState.step = 'asking_ciudad';
+                        break;
+                    }
+                
+                    case 'asking_ciudad': {
+                        userState.data.ciudad = msg.body;
+                        conversacion.msg3r = userState.data.ciudad;
+                        conversacion.msg4p = `Gracias, ${userState.data.name} ${userState.data.lastName}, ¿puedes proporcionarnos tu correo electrónico?`;
+                
+                        await client.sendMessage(msg.from, conversacion.msg4p);
+                        userState.step = 'asking_email';
+                        break;
+                    }
+                
+                    case 'asking_email': {
+                        const email = msg.body;
+                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                
+                        if (emailRegex.test(email)) {
+                            userState.data.email = email;
+                            conversacion.msg4r=userState.data.email;
+                            mensajeFinal = `¡Gracias! Hemos recibido la siguiente información:\nNombre: ${userState.data.name} ${userState.data.lastName}\nCiudad: ${userState.data.ciudad}\nEmail: ${userState.data.email}\nEn breve se te asignará un agente.`;
+                            await client.sendMessage(msg.from, mensajeFinal);
+                
+                            // Limpiar el estado del usuario
+                            delete conversationState[phoneNumber];
+                
+                            // Crear y almacenar información en el sistema
+                            const personas = {
+                                etiq_id: 1,
+                                pers_nombres: userState.data.name,
+                                pers_apellidos: userState.data.lastName,
+                                pers_telefono: phoneNumber,
+                                pers_ciudad: userState.data.ciudad,
+                                usuario: 'BOT',
+                            };
+                
+                            const new_Obj = {
+                                personas,
+                                usu_email: userState.data.email,
+                                usu_nickname: 'cliente',
+                                usuario: 'BOT',
+                                etiq_id: 1,
+                            };
+                
+                            const result = await pool.query(
+                                'SELECT crm_clientepersona_v1($1, $2, $3, $4)',
+                                [new_Obj, "I", _limite, _offset]
+                            );
+                
+                            const respuesta = result.rows[0]?.crm_clientepersona_v1;
+                
+                            if (respuesta?.status === 'ok' && respuesta.code === 200) {
+                                console.log(respuesta)
+        
+                                // SE HACE REGISTRO DE UN NUEVO CHAT
+                                const obj_messageWhatsappBOT={
+                                    //pers_id_sender:pers_id_sender,
+                                    pers_id_sender:48, //ID DEL BOT 
+                                    number:phoneNumber,
+                                    conversacionInicial:conversacion,
+                                    msg_contenido:mensajeFinal,
+                                    msg_tipo:'W',
+                                    chat_name:'Chat desde whatsapp'
+                                } 
+                                
+                                //RESPUESTA DEL CHAT
+                                const opcionM="I_W_CHAT";
+                                const _limite=0;
+                                const _offset=0;
+                                
+                                const resultM = await pool.query(
+                                    'SELECT crm_mensajes_v1($1, $2, $3, $4)',
+                                    [obj_messageWhatsappBOT, opcionM, _limite, _offset]
+                                  );
+                                  const respuestaM = resultM.rows[0].crm_mensajes_v1;
+                                  console.log(respuestaM);
+                                  if (respuestaM.status === 'ok' && respuestaM.code === 200) {
+                                    console.log(respuestaM)
+                                    //res.status(200).json({ code:respuesta.code, status: respuesta.status, message: respuesta.message, obj:respuesta.obj });
+                                  } else if (respuestaM.status === 'ok' && respuestaM.code === 400) {
+        
+                                  }
+        
+        
+        
+        
+        
+                                //res.status(200).json({ code:respuesta.code, status: respuesta.status, message: respuesta.message, obj:respuesta.obj });
+                            } else if (respuesta.status === 'ok' && respuesta.code === 400) {
+                                
+                            }
+                        } else {
+                            await client.sendMessage(msg.from, 'El correo proporcionado no es válido. Por favor, ingresa un correo electrónico válido.');
+                        }
+                        break;
+                    }
+                
+                    default:
+                        console.log(`Estado no manejado: ${userState.step}`);
+                        break;
                 }
 
 
-
+                //fin
             }
-
-
-          } else {
-            console.log(respuesta)
-            //res.status(respuesta.code).json({ status: respuesta.status, message: respuesta.message });
-          }
-
-         // SE DEBE CONTROLAR CUANDO NO ES UN NUMERO REGISTRADO
-          console.log(respuesta)  
-
-    } else if (msg.type === 'ptt') {
-        //console.log('Nota de voz recibida, ignorando...');
-        await client.sendMessage(msg.from, `No se puede aceptar este tipo de mensaje, Nota de voz recibida, ignorando... `);
-
-        // Puedes hacer algo aquí si es una nota de voz, como notificar al usuario
-    } else {
-        //console.log('Otro tipo de mensaje recibido:', message.type);
-        await client.sendMessage(msg.from, `No se puede aceptar este tipo de mensaje, ignorando... `);
-        
-    }
-
-    
-        
+        }
     });
-
-
 
     client.initialize();
 };
 
+
 // Inicializa el cliente en la carga del controlador
+llamarEmpresas();
 initializeClient();
 
 exports.sendMessage = async (req, res) => {
