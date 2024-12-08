@@ -169,18 +169,6 @@ const initializeClient = () => {
                 const userState = conversationState[phoneNumber];
                 console.log(`Estado actual para ${phoneNumber}:`, userState);
                 
-                // Buscar palabras clave en el mensaje
-                /* const matchedKeyword = Object.keys(keywords).find((key) =>
-                    message.includes(key)
-                ); */
-
-
-                /* const cleanedMessage = message.trim();  // Eliminar espacios alrededor del mensaje
-                const matchedKeyword = Object.keys(keywords).find((key) =>
-                    cleanedMessage.toLowerCase().includes(key)
-                );
-                
-                console.log("matchedKeyword:", matchedKeyword); */
                 const messageLowerCase = msg.body.trim().toLowerCase();  // Limpiar y convertir a minúsculas
                 console.log("messageLowerCase")
                 console.log(messageLowerCase)
