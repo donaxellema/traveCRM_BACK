@@ -5,6 +5,8 @@ const express = require('express');
 const { addPerson,getPersons } = require('../Controladores/fbase_mensajes/personas/personasController');
 const { addUser,getUsers } = require('../Controladores/fbase_mensajes/usuarios/usuariosController');
 const { addChat,getChats } = require('../Controladores/fbase_mensajes/chat/chatController');
+const { addMessage } = require('../Controladores/fbase_mensajes/mensajes/messagesController'); // Importa la función addMessage
+
 
 const router = express.Router();
 
@@ -15,5 +17,5 @@ router.post('/create_chat', addChat);
 
 router.post('/create_user', addUser);
 //router.post('/create_messages',addMessage );
-
+router.post('/create_message', addMessage); 
 module.exports = router;
