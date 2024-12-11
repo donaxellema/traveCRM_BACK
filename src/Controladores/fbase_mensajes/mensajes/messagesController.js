@@ -1,3 +1,4 @@
+//const { db,auth } = require('../../../Database/firebase');
 const { db,auth } = require('../../../Database/firebase');
 
 // Función para agregar un mensaje a la colección 'messages'
@@ -23,13 +24,14 @@ const addMessage = async (req, res) => {
       msg_fchreg: new Date().toISOString(),           // Marca de tiempo como string
     });
 
-    res.status(200).json({
+    /* res.status(200).json({
       id: docRef.id, 
       message: 'Mensaje agregado correctamente'
-    });
+    }); */
+    console.log("Mensaje agregado correctamente")
   } catch (error) {
     console.error('Error al agregar el mensaje:', error);
-    res.status(500).json({ error: error.message });
+    //res.status(500).json({ error: error.message });
   }
 };
 

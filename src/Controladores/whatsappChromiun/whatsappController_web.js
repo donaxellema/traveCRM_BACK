@@ -6,7 +6,8 @@ const qrcode = require('qrcode-terminal');
 
 const fs = require('fs');
 const path = require('path');
-const { addMessage } = require('../fbase_mensajes/mensajes/messagesController.js') 
+//const { addMessage } = require('../fbase_mensajes/mensajes/messagesController.js') 
+const { addMessage } = require('../fbase_mensajes/mensajes/messagesController') 
 
 //controladores
 const { getEmpresasCRUD } = require('../../Controladores/empresas/empresasController');
@@ -174,6 +175,9 @@ const initializeClient = () => {
                     msg_fchreg: msg_fchreg      // Fecha actual
                 };
 
+                console.log("messageData")
+                console.log(messageData)
+
                 // Llamar a la función addMessage y pasar el objeto messageData
                 try {
                     const response = await addMessage({ body: messageData });  // Pasamos messageData como req.body
@@ -183,6 +187,8 @@ const initializeClient = () => {
                 }
                 /*FIN, CODIGO FIREBASE*/ 
             } else if (respuesta.status === 'ok' && respuesta.code === 400) {
+                console.log(respuesta)
+                console.log(dataEmp)
                 const message = "El usuario no se encuentra registrado en el sistema";
                 const chatId = `${phoneNumber}@c.us`;
                 dataEmp = respuesta.empresa[0];
@@ -335,6 +341,36 @@ const initializeClient = () => {
                                   if (respuestaM.status === 'ok' && respuestaM.code === 200) {
                                     console.log(respuestaM)
                                     //res.status(200).json({ code:respuesta.code, status: respuesta.status, message: respuesta.message, obj:respuesta.obj });
+
+                                    /*INICIO, CODIGO FIREBASE*/ 
+                                    // Usar el chat_id y pers_id_sender de la respuesta
+                                        const chatId = respuesta.chat_id;
+                                        const senderId = respuesta.pers_id_sender;  // Ahora usamos pers_id_sender de la respuesta
+                                        const message = msg.body;  // El contenido del mensaje recibido
+                                        const receiverId = 1;  // El ID del receptor (puedes obtenerlo de la base de datos si es necesario)
+                                        const msg_fchreg = new Date().toISOString();  // Fecha actual en formato ISO
+
+                                        // Crear el objeto messageData que será enviado a la función addMessage
+                                        const messageData = {
+                                            message: message,           // Contenido del mensaje
+                                            senderId: senderId,         // ID del remitente (pers_id_sender de la respuesta)
+                                            receiverId: receiverId,     // ID del receptor
+                                            chatId: chatId,             // ID del chat (obtenido de la respuesta)
+                                            msg_fchreg: msg_fchreg      // Fecha actual
+                                        };
+
+                                        console.log("messageData")
+                                        console.log(messageData)
+
+                                        // Llamar a la función addMessage y pasar el objeto messageData
+                                        try {
+                                            const response = await addMessage({ body: messageData });  // Pasamos messageData como req.body
+                                            console.log('Mensaje guardado correctamente en Firestore:', response);
+                                        } catch (error) {
+                                            console.error('Error al guardar el mensaje:', error);
+                                        }
+                                    /*FIN, CODIGO FIREBASE*/ 
+                
                                   } else if (respuestaM.status === 'ok' && respuestaM.code === 400) {
         
                                   }
@@ -431,7 +467,43 @@ exports.sendMessage = async (req, res) => {
           const respuesta = result.rows[0].crm_mensajes_v1;
           if (respuesta.status === 'ok' && respuesta.code === 200) {
             console.log(respuesta)
+            /*INICIO, CODIGO FIREBASE*/ 
+               
+                /*FIN, CODIGO FIREBASE*/ 
+
+                
             res.status(200).json({ code:respuesta.code, status: respuesta.status, message: respuesta.message, obj:respuesta.obj });
+
+
+
+
+             // Usar el chat_id y pers_id_sender de la respuesta
+             const chatId = respuesta.chat_id;
+             const senderId = respuesta.pers_id_sender;  // Ahora usamos pers_id_sender de la respuesta
+             const message = msg.body;  // El contenido del mensaje recibido
+             const receiverId = 1;  // El ID del receptor (puedes obtenerlo de la base de datos si es necesario)
+             const msg_fchreg = new Date().toISOString();  // Fecha actual en formato ISO
+
+             // Crear el objeto messageData que será enviado a la función addMessage
+             const messageData = {
+                 message: message,           // Contenido del mensaje
+                 senderId: senderId,         // ID del remitente (pers_id_sender de la respuesta)
+                 receiverId: receiverId,     // ID del receptor
+                 chatId: chatId,             // ID del chat (obtenido de la respuesta)
+                 msg_fchreg: msg_fchreg      // Fecha actual
+             };
+
+             console.log("messageData")
+             console.log(messageData)
+
+             // Llamar a la función addMessage y pasar el objeto messageData
+             try {
+                 const response = await addMessage({ body: messageData });  // Pasamos messageData como req.body
+                 console.log('Mensaje guardado correctamente en Firestore:', response);
+             } catch (error) {
+                 console.error('Error al guardar el mensaje:', error);
+             }
+             
           } else {
             console.log(respuesta)
             res.status(respuesta.code).json({ status: respuesta.status, message: respuesta.message });
